@@ -22,13 +22,12 @@ db.getConnection((err, connection) => {
       throw err;
     }
     console.log('Connected to the database');
-    connection.release(); // Release the connection
+    connection.release();
   });
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-// Define routes
 app.get('/products', (req, res) => {
   db.query('SELECT * FROM products', (err, results) => {
     if (err) {
@@ -74,7 +73,6 @@ app.post('/addproduct', (req, res) => {
   app.delete('/removeproduct/:productName', (req, res) => {
     const productName = req.params.productName;
   
-    // Execute a DELETE query to remove the product with the specified name from the database
     db.query('DELETE FROM products WHERE name = ?', [productName], (err, result) => {
       if (err) {
         res.status(500).json({ error: err.message });
@@ -91,7 +89,6 @@ app.post('/addproduct', (req, res) => {
   app.delete('/removeproductid/:productId', (req, res) => {
     const productId = req.params.productId;
   
-    // Execute a DELETE query to remove the product from the database
     db.query('DELETE FROM products WHERE id = ?', [productId], (err, result) => {
       if (err) {
         res.status(500).json({ error: err.message });
