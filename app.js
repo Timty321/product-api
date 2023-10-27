@@ -55,6 +55,56 @@ app.post('/products', (req, res) => {
   });
 });
 
+app.post('/addproduct', (req, res) => {
+    const { name, stock } = req.body;
+    const updateTime = new Date();
+  
+    const query = 'INSERT INTO products (name, stock, update_time) VALUES (?, ?, ?)';
+    const values = [name, stock, updateTime];
+  
+    db.query(query, values, (err, result) => {
+      if (err) {
+        res.status(400).json({ error: err.message });
+        return;
+      }
+      res.json({ message: 'Product added successfully', id: result.insertId });
+    });
+  });
+
+  app.delete('/removeproduct/:productName', (req, res) => {
+    const productName = req.params.productName;
+  
+    // Execute a DELETE query to remove the product with the specified name from the database
+    db.query('DELETE FROM products WHERE name = ?', [productName], (err, result) => {
+      if (err) {
+        res.status(500).json({ error: err.message });
+      } else {
+        if (result.affectedRows === 1) {
+          res.json({ message: 'Product removed successfully' });
+        } else {
+          res.status(404).json({ error: 'Product not found' });
+        }
+      }
+    });
+  });  
+  
+  app.delete('/removeproductid/:productId', (req, res) => {
+    const productId = req.params.productId;
+  
+    // Execute a DELETE query to remove the product from the database
+    db.query('DELETE FROM products WHERE id = ?', [productId], (err, result) => {
+      if (err) {
+        res.status(500).json({ error: err.message });
+      } else {
+        if (result.affectedRows === 1) {
+          res.json({ message: 'Product removed successfully' });
+        } else {
+          res.status(404).json({ error: 'Product not found' });
+        }
+      }
+    });
+  });
+
 app.use(cors());
 
 app.listen(port, () => {
