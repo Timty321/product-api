@@ -4,6 +4,7 @@ const bodyParser = require('body-parser');
 const dotenv = require('dotenv');
 const app = express();
 const port = process.env.PORT || 1616;
+const cors = require('cors');
 
 dotenv.config();
 
@@ -53,6 +54,8 @@ app.post('/products', (req, res) => {
     res.json({ message: 'Product added successfully', id: result.insertId });
   });
 });
+
+app.use(cors());
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
